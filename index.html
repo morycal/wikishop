@@ -1,0 +1,2193 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>مگا شاپ | فروشگاه اینترنتی حرفه‌ای</title>
+    <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* Reset & Base */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #2d3436;
+            direction: rtl;
+            min-height: 100vh;
+        }
+
+        :root {
+            --primary: #6c5ce7;
+            --primary-dark: #5a4bd1;
+            --secondary: #fd79a8;
+            --accent: #00b894;
+            --danger: #e17055;
+            --warning: #fdcb6e;
+            --info: #74b9ff;
+            --dark: #2d3436;
+            --gray: #636e72;
+            --gray-light: #dfe6e9;
+            --light: #f8f9fa;
+            --white: #ffffff;
+            --shadow: 0 4px 12px rgba(0,0,0,0.08);
+            --shadow-lg: 0 12px 35px rgba(0,0,0,0.12);
+            --radius: 10px;
+            --radius-lg: 16px;
+            --transition: all 0.3s ease;
+        }
+
+        /* Toast */
+        .toast-container {
+            position: fixed; top: 20px; left: 20px;
+            z-index: 9999; display: flex; flex-direction: column; gap: 10px;
+        }
+        .toast {
+            background: var(--white); padding: 16px 20px;
+            border-radius: var(--radius); box-shadow: var(--shadow-lg);
+            display: flex; align-items: center; gap: 12px;
+            animation: slideIn 0.3s ease; border-right: 4px solid var(--primary);
+            min-width: 320px;
+        }
+        .toast.success { border-color: var(--accent); }
+        .toast.error { border-color: var(--danger); }
+        .toast.warning { border-color: var(--warning); }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5); display: none;
+            justify-content: center; align-items: center; z-index: 999;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: var(--white); border-radius: var(--radius-lg);
+            width: 90%; max-width: 500px; box-shadow: var(--shadow-lg);
+        }
+        .modal-header {
+            padding: 20px; border-bottom: 1px solid var(--gray-light);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .modal-body { padding: 20px; }
+        .modal-footer {
+            padding: 20px; border-top: 1px solid var(--gray-light);
+            display: flex; gap: 10px; justify-content: flex-end;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center;
+            gap: 8px; padding: 10px 20px; border-radius: var(--radius);
+            font-weight: 600; cursor: pointer; transition: var(--transition);
+            border: none; outline: none;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--accent); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-outline { background: transparent; border: 2px solid var(--primary); color: var(--primary); }
+        .btn-sm { padding: 6px 12px; font-size: 0.85rem; }
+        .btn-lg { padding: 14px 28px; font-size: 1rem; }
+        .btn-block { width: 100%; }
+
+        /* Cards */
+        .card {
+            background: var(--white); border-radius: var(--radius-lg);
+            padding: 24px; box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        .card:hover { box-shadow: var(--shadow-lg); }
+
+        /* Tables */
+        .table-container { overflow-x: auto; margin-top: 16px; }
+        .table {
+            width: 100%; border-collapse: collapse;
+            background: var(--white);
+        }
+        .table th {
+            background: #f8f9fa; padding: 16px;
+            text-align: right; font-weight: 600;
+            color: var(--gray); border-bottom: 2px solid var(--gray-light);
+        }
+        .table td { padding: 16px; border-bottom: 1px solid var(--gray-light); }
+        .table tr:hover td { background: rgba(108,92,231,0.03); }
+
+        /* Forms */
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; margin-bottom: 8px; font-weight: 600; }
+        .form-control {
+            width: 100%; padding: 12px 16px;
+            border: 2px solid var(--gray-light); border-radius: var(--radius);
+            font-size: 0.95rem; transition: var(--transition);
+        }
+        .form-control:focus { border-color: var(--primary); outline: none; }
+        textarea.form-control { min-height: 100px; resize: vertical; }
+
+        /* Badges */
+        .badge {
+            display: inline-flex; align-items: center; gap: 4px;
+            padding: 4px 12px; border-radius: 20px;
+            font-size: 0.8rem; font-weight: 600;
+        }
+        .badge-primary { background: rgba(108,92,231,0.12); color: var(--primary); }
+        .badge-success { background: rgba(0,184,148,0.12); color: var(--accent); }
+        .badge-danger { background: rgba(225,112,85,0.12); color: var(--danger); }
+
+        /* Grid */
+        .grid { display: grid; gap: 24px; }
+        .grid-cols-2 { grid-template-columns: repeat(2, 1fr); }
+        .grid-cols-3 { grid-template-columns: repeat(3, 1fr); }
+        .grid-cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+        /* Navbar */
+        .navbar {
+            position: fixed; top: 0; left: 0; right: 0;
+            height: 70px; background: var(--white);
+            box-shadow: var(--shadow); display: flex;
+            align-items: center; padding: 0 24px; z-index: 100;
+            justify-content: space-between;
+        }
+        .logo {
+            display: flex; align-items: center; gap: 12px;
+            font-size: 1.3rem; font-weight: 700; color: var(--primary);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed; top: 70px; right: 0; bottom: 0;
+            width: 260px; background: var(--white);
+            border-left: 1px solid var(--gray-light);
+            overflow-y: auto; padding: 20px 0; z-index: 99;
+        }
+        .sidebar-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 12px 20px; color: var(--dark);
+            cursor: pointer; transition: var(--transition);
+            border-right: 3px solid transparent;
+        }
+        .sidebar-item:hover { background: rgba(108,92,231,0.05); }
+        .sidebar-item.active {
+            background: rgba(108,92,231,0.1);
+            border-right-color: var(--primary); color: var(--primary);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-right: 260px; margin-top: 70px;
+            padding: 24px; min-height: calc(100vh - 70px);
+        }
+
+        /* Product Card */
+        .product-card {
+            background: var(--white); border-radius: var(--radius-lg);
+            overflow: hidden; box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+        .product-card:hover { transform: translateY(-5px); box-shadow: var(--shadow-lg); }
+        .product-image {
+            height: 200px; background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 3rem; color: var(--primary);
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white; padding: 60px 48px; border-radius: var(--radius-lg);
+            text-align: center; margin-bottom: 48px;
+        }
+
+        /* Mode Switch */
+        .mode-switch {
+            position: fixed; bottom: 24px; left: 24px;
+            width: 56px; height: 56px; border-radius: 50%;
+            background: var(--primary); color: white;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 100; box-shadow: var(--shadow-lg);
+        }
+
+        /* Animations */
+        @keyframes slideIn {
+            from { transform: translateX(100px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar { transform: translateX(100%); }
+            .sidebar.active { transform: translateX(0); }
+            .main-content { margin-right: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Toast Container -->
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- App Container -->
+<div id="appContainer"></div>
+
+<script>
+// ====================================================================
+// DATABASE & STATE
+// ====================================================================
+const DB = {
+    users: [
+        { id: 1, name: 'مدیر سیستم', email: 'admin@megashop.ir', password: 'admin123', role: 'admin', phone: '09121111111', avatar: 'مد', createdAt: '2024-01-01' },
+        { id: 2, name: 'علی محمدی', email: 'user@megashop.ir', password: 'user123', role: 'user', phone: '09121234567', avatar: 'ع', createdAt: '2024-02-01' }
+    ],
+
+    products: [
+        { id: 1, name: 'لپ‌تاپ گیمینگ', category: 'electronics', price: 42000000, stock: 8, rating: 4.7, description: 'لپ‌تاپ گیمینگ با پردازنده Core i9', image: '💻', status: 'active' },
+        { id: 2, name: 'هدفون بی‌سیم', category: 'electronics', price: 4500000, stock: 25, rating: 4.8, description: 'هدفون بی‌سیم با حذف نویز فعال', image: '🎧', status: 'active' }
+    ],
+
+    categories: [
+        { id: 1, name: 'الکترونیک', slug: 'electronics', icon: '📱', status: 'active' },
+        { id: 2, name: 'مد و پوشاک', slug: 'fashion', icon: '👕', status: 'active' }
+    ],
+
+    orders: [
+        { id: 1001, userId: 2, customerName: 'علی محمدی', total: 13900000, status: 'delivered', createdAt: '2024-03-10' }
+    ],
+
+    admins: [
+        { id: 1, name: 'مدیر ارشد', email: 'admin@megashop.ir', role: 'super_admin', phone: '09121111111', status: 'active', lastLogin: new Date().toISOString().split('T')[0] }
+    ],
+
+    tickets: [
+        { id: 1001, userId: 2, userName: 'علی محمدی', subject: 'مشکل در ثبت سفارش', message: 'نمی‌توانم سفارش خود را ثبت کنم.', department: 'support', priority: 'high', status: 'open', responses: [], createdAt: '2024-04-12', updatedAt: '2024-04-12' }
+    ],
+
+    notifications: [
+        { id: 1, title: 'سفارش جدید', message: 'سفارش #1003 ثبت شد', type: 'order', isRead: false, createdAt: '2024-04-15' }
+    ],
+
+    discountCodes: [
+        { id: 1, code: 'WELCOME10', type: 'percent', value: 10, status: 'active', expiresAt: '2024-06-01' }
+    ],
+
+    paymentGateways: [
+        { id: 1, name: 'زرین‌پال', type: 'online', status: 'active', description: 'درگاه پرداخت زرین‌پال' }
+    ],
+
+    settings: {
+        siteName: 'مگا شاپ',
+        siteDescription: 'بهترین محصولات با بهترین قیمت‌ها'
+    }
+};
+
+// Initialize localStorage
+if (!localStorage.getItem('megashop_database')) {
+    localStorage.setItem('megashop_database', JSON.stringify(DB));
+}
+
+// Load from localStorage
+const loadDB = () => JSON.parse(localStorage.getItem('megashop_database')) || DB;
+const saveDB = (db) => localStorage.setItem('megashop_database', JSON.stringify(db));
+
+// State
+let currentUser = JSON.parse(localStorage.getItem('current_user')) || null;
+let currentMode = 'frontend';
+let currentPage = 'home';
+let adminPage = 'dashboard';
+let cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+// ====================================================================
+// UTILITY FUNCTIONS
+// ====================================================================
+function showToast(type, title, message, duration = 4000) {
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = `toast ${type}`;
+    toast.innerHTML = `
+        <div>${type === 'success' ? '✅' : type === 'error' ? '❌' : '⚠️'}</div>
+        <div>
+            <div style="font-weight: 600;">${title}</div>
+            <div style="font-size: 0.9rem; color: #666;">${message}</div>
+        </div>
+        <button onclick="this.parentElement.remove()" style="background: none; border: none; cursor: pointer;">✕</button>
+    `;
+    container.appendChild(toast);
+    setTimeout(() => toast.remove(), duration);
+}
+
+function formatPrice(price) {
+    return new Intl.NumberFormat('fa-IR').format(price) + ' تومان';
+}
+
+function formatDate(dateStr) {
+    return new Date(dateStr).toLocaleDateString('fa-IR');
+}
+
+function openModal(id) {
+    document.getElementById(id).classList.add('active');
+}
+
+function closeModal(id) {
+    document.getElementById(id).classList.remove('active');
+}
+
+function updateLocalStorage() {
+    localStorage.setItem('current_user', JSON.stringify(currentUser));
+    localStorage.setItem('cart', JSON.stringify(cart));
+}
+
+// ====================================================================
+// AUTH FUNCTIONS
+// ====================================================================
+function login(email, password) {
+    const db = loadDB();
+    const user = db.users.find(u => u.email === email && u.password === password);
+    
+    if (user) {
+        currentUser = user;
+        updateLocalStorage();
+        
+        // Update admin last login
+        const admin = db.admins.find(a => a.email === email);
+        if (admin) {
+            admin.lastLogin = new Date().toISOString().split('T')[0];
+            saveDB(db);
+        }
+        
+        showToast('success', 'ورود موفق', `خوش آمدید ${user.name}!`);
+        return true;
+    }
+    
+    showToast('error', 'خطا در ورود', 'ایمیل یا رمز عبور اشتباه است');
+    return false;
+}
+
+function logout() {
+    currentUser = null;
+    localStorage.removeItem('current_user');
+    showToast('success', 'خروج', 'با موفقیت خارج شدید');
+    renderApp();
+}
+
+// ====================================================================
+// CART FUNCTIONS
+// ====================================================================
+function addToCart(productId, quantity = 1) {
+    const db = loadDB();
+    const product = db.products.find(p => p.id === productId);
+    
+    if (!product) {
+        showToast('error', 'خطا', 'محصول یافت نشد');
+        return false;
+    }
+    
+    const existingItem = cart.find(item => item.productId === productId);
+    if (existingItem) {
+        existingItem.quantity += quantity;
+    } else {
+        cart.push({ productId, quantity });
+    }
+    
+    updateLocalStorage();
+    showToast('success', 'سبد خرید', `${product.name} به سبد خرید اضافه شد`);
+    
+    if (currentMode === 'frontend' && currentPage === 'cart') {
+        renderPage();
+    }
+    
+    return true;
+}
+
+function removeFromCart(productId) {
+    cart = cart.filter(item => item.productId !== productId);
+    updateLocalStorage();
+    
+    if (currentMode === 'frontend' && currentPage === 'cart') {
+        renderPage();
+    }
+}
+
+function clearCart() {
+    cart = [];
+    updateLocalStorage();
+    showToast('info', 'سبد خرید', 'سبد خرید خالی شد');
+    
+    if (currentMode === 'frontend' && currentPage === 'cart') {
+        renderPage();
+    }
+}
+
+function getCartTotal() {
+    const db = loadDB();
+    return cart.reduce((total, item) => {
+        const product = db.products.find(p => p.id === item.productId);
+        return total + (product ? product.price * item.quantity : 0);
+    }, 0);
+}
+
+function getCartCount() {
+    return cart.reduce((count, item) => count + item.quantity, 0);
+}
+
+// ====================================================================
+// MAIN RENDER
+// ====================================================================
+function renderApp() {
+    const container = document.getElementById('appContainer');
+    
+    if (currentMode === 'frontend') {
+        container.innerHTML = renderFrontend();
+        renderPage();
+    } else {
+        if (!currentUser || currentUser.role !== 'admin') {
+            showToast('error', 'دسترسی محدود', 'شما دسترسی به پنل مدیریت ندارید');
+            toggleMode();
+            return;
+        }
+        container.innerHTML = renderAdminPanel();
+        renderAdminPage();
+    }
+}
+
+function toggleMode() {
+    currentMode = currentMode === 'frontend' ? 'admin' : 'frontend';
+    showToast('info', 'تغییر حالت', 
+        currentMode === 'frontend' ? 'حالت فروشگاه فعال شد' : 'حالت مدیریت فعال شد');
+    renderApp();
+}
+
+// ====================================================================
+// FRONTEND RENDERER
+// ====================================================================
+function renderFrontend() {
+    const cartCount = getCartCount();
+    
+    return `
+    <nav class="navbar">
+        <div style="display: flex; align-items: center; gap: 24px;">
+            <a href="#" class="logo" onclick="navigateTo('home')">
+                <i class="fas fa-store"></i>
+                <span>${DB.settings.siteName}</span>
+            </a>
+            
+            <div style="display: flex; gap: 24px;">
+                <a href="#" class="${currentPage === 'home' ? 'active' : ''}" onclick="navigateTo('home')" style="padding: 8px 16px; border-radius: var(--radius); ${currentPage === 'home' ? 'background: rgba(108,92,231,0.1); color: var(--primary);' : 'color: var(--dark);'}">
+                    خانه
+                </a>
+                <a href="#" class="${currentPage === 'products' ? 'active' : ''}" onclick="navigateTo('products')" style="padding: 8px 16px; border-radius: var(--radius); ${currentPage === 'products' ? 'background: rgba(108,92,231,0.1); color: var(--primary);' : 'color: var(--dark);'}">
+                    محصولات
+                </a>
+            </div>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <button class="btn btn-ghost" onclick="navigateTo('cart')" style="position: relative;">
+                <i class="fas fa-shopping-cart"></i>
+                <span class="cart-badge" style="position: absolute; top: -5px; right: -5px; background: var(--danger); color: white; width: 20px; height: 20px; border-radius: 50%; display: ${cartCount > 0 ? 'flex' : 'none'}; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700;">${cartCount}</span>
+            </button>
+            
+            ${currentUser ? `
+                <div style="position: relative;">
+                    <button class="btn" onclick="toggleUserMenu()" style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; font-weight: 600;">
+                        ${currentUser.avatar}
+                    </button>
+                    <div id="userMenu" style="display: none; position: absolute; top: 50px; left: 0; background: var(--white); box-shadow: var(--shadow-lg); border-radius: var(--radius); min-width: 200px; z-index: 101;">
+                        <div style="padding: 16px; border-bottom: 1px solid var(--gray-light);">
+                            <div style="font-weight: 600;">${currentUser.name}</div>
+                            <div style="font-size: 0.85rem; color: var(--gray);">${currentUser.email}</div>
+                        </div>
+                        <a href="#" onclick="navigateTo('profile')" style="display: block; padding: 12px 16px; color: var(--dark);">👤 پروفایل</a>
+                        <a href="#" onclick="navigateTo('orders')" style="display: block; padding: 12px 16px; color: var(--dark);">📋 سفارشات</a>
+                        ${currentUser.role === 'admin' ? `<a href="#" onclick="toggleMode()" style="display: block; padding: 12px 16px; color: var(--primary); border-top: 1px solid var(--gray-light);">⚙️ مدیریت</a>` : ''}
+                        <a href="#" onclick="logout()" style="display: block; padding: 12px 16px; color: var(--danger); border-top: 1px solid var(--gray-light);">🚪 خروج</a>
+                    </div>
+                </div>
+            ` : `
+                <button class="btn btn-outline" onclick="navigateTo('login')">
+                    <i class="fas fa-sign-in-alt"></i> ورود
+                </button>
+            `}
+        </div>
+    </nav>
+    
+    <div class="main-content" id="pageContent">
+        <!-- Content will be loaded here -->
+    </div>
+    
+    <div class="mode-switch" onclick="toggleMode()">
+        <i class="fas ${currentMode === 'frontend' ? 'fa-cogs' : 'fa-store'}"></i>
+    </div>
+    `;
+}
+
+function navigateTo(page) {
+    currentPage = page;
+    const userMenu = document.getElementById('userMenu');
+    if (userMenu) userMenu.style.display = 'none';
+    renderPage();
+}
+
+function toggleUserMenu() {
+    const menu = document.getElementById('userMenu');
+    if (menu) menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+}
+
+// ====================================================================
+// FRONTEND PAGES
+// ====================================================================
+function renderPage() {
+    const container = document.getElementById('pageContent');
+    
+    switch(currentPage) {
+        case 'home': container.innerHTML = renderHomePage(); break;
+        case 'products': container.innerHTML = renderProductsPage(); break;
+        case 'cart': container.innerHTML = renderCartPage(); break;
+        case 'login': container.innerHTML = renderLoginPage(); break;
+        case 'profile': container.innerHTML = renderProfilePage(); break;
+        case 'orders': container.innerHTML = renderOrdersPage(); break;
+        default: container.innerHTML = renderHomePage();
+    }
+}
+
+function renderHomePage() {
+    const db = loadDB();
+    return `
+    <div class="hero">
+        <h1>🛍️ به ${db.settings.siteName} خوش آمدید</h1>
+        <p style="font-size: 1.2rem; opacity: 0.9; margin-bottom: 32px; max-width: 600px; margin-right: auto; margin-left: auto;">${db.settings.siteDescription}</p>
+        <button class="btn btn-primary btn-lg" onclick="navigateTo('products')">
+            <i class="fas fa-shopping-bag"></i> شروع خرید
+        </button>
+    </div>
+    
+    <h2 style="margin-bottom: 24px; font-size: 1.5rem; font-weight: 700;">🔥 محصولات ویژه</h2>
+    
+    <div class="grid grid-cols-4" style="gap: 24px;">
+        ${db.products.slice(0, 4).map(product => `
+        <div class="product-card">
+            <div class="product-image">${product.image}</div>
+            <div class="product-info" style="padding: 20px;">
+                <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 8px;">${product.name}</div>
+                <div style="color: var(--primary); font-size: 1.3rem; font-weight: 700; margin-bottom: 12px;">${formatPrice(product.price)}</div>
+                <div style="font-size: 0.9rem; color: var(--gray); margin-bottom: 16px;">${product.description}</div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-primary btn-sm" style="flex: 1;" onclick="addToCart(${product.id})">
+                        <i class="fas fa-cart-plus"></i> افزودن
+                    </button>
+                </div>
+            </div>
+        </div>
+        `).join('')}
+    </div>
+    `;
+}
+
+function renderProductsPage() {
+    const db = loadDB();
+    return `
+    <h1 style="margin-bottom: 24px; font-size: 1.5rem; font-weight: 700;">🛒 همه محصولات</h1>
+    
+    <div class="grid grid-cols-4" style="gap: 24px;">
+        ${db.products.map(product => `
+        <div class="product-card">
+            <div class="product-image">${product.image}</div>
+            <div class="product-info" style="padding: 20px;">
+                <div style="font-size: 1.1rem; font-weight: 600; margin-bottom: 8px;">${product.name}</div>
+                <div style="color: var(--primary); font-size: 1.3rem; font-weight: 700; margin-bottom: 12px;">${formatPrice(product.price)}</div>
+                <div style="font-size: 0.9rem; color: var(--gray); margin-bottom: 16px;">${product.description}</div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-primary btn-sm" style="flex: 1;" onclick="addToCart(${product.id})">
+                        <i class="fas fa-cart-plus"></i> افزودن
+                    </button>
+                </div>
+            </div>
+        </div>
+        `).join('')}
+    </div>
+    `;
+}
+
+function renderCartPage() {
+    const db = loadDB();
+    
+    if (cart.length === 0) {
+        return `
+        <div style="text-align: center; padding: 80px 20px;">
+            <div style="font-size: 4rem; color: var(--gray-light); margin-bottom: 24px;">🛒</div>
+            <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;">سبد خرید شما خالی است</h2>
+            <button class="btn btn-primary" onclick="navigateTo('products')">
+                <i class="fas fa-shopping-bag"></i> مشاهده محصولات
+            </button>
+        </div>
+        `;
+    }
+    
+    const cartItems = cart.map(item => {
+        const product = db.products.find(p => p.id === item.productId);
+        return product ? { product, quantity: item.quantity } : null;
+    }).filter(item => item !== null);
+    
+    const total = cartItems.reduce((sum, item) => sum + (item.product.price * item.quantity), 0);
+    
+    return `
+    <h1 style="margin-bottom: 24px; font-size: 1.5rem; font-weight: 700;">🛒 سبد خرید</h1>
+    
+    <div class="grid grid-cols-3" style="gap: 24px;">
+        <div style="grid-column: span 2;">
+            <div class="card">
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>محصول</th>
+                                <th>قیمت</th>
+                                <th>تعداد</th>
+                                <th>جمع</th>
+                                <th>عملیات</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${cartItems.map(item => `
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <div style="font-size: 2rem;">${item.product.image}</div>
+                                        <div>${item.product.name}</div>
+                                    </div>
+                                </td>
+                                <td>${formatPrice(item.product.price)}</td>
+                                <td>${item.quantity}</td>
+                                <td>${formatPrice(item.product.price * item.quantity)}</td>
+                                <td>
+                                    <button class="btn btn-sm" style="background: var(--danger); color: white;" onclick="removeFromCart(${item.product.id})">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-top: 20px;">
+                    <button class="btn btn-danger" onclick="clearCart()">
+                        <i class="fas fa-trash"></i> خالی کردن سبد خرید
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div>
+            <div class="card">
+                <h3 style="font-size: 1.2rem; font-weight: 600; margin-bottom: 20px;">خلاصه سفارش</h3>
+                
+                <div style="margin-bottom: 24px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <span>جمع کل:</span>
+                        <span>${formatPrice(total)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <span>هزینه ارسال:</span>
+                        <span>${total > 1000000 ? 'رایگان' : formatPrice(50000)}</span>
+                    </div>
+                    <div style="border-top: 2px solid var(--gray-light); padding-top: 16px; margin-top: 16px;">
+                        <div style="display: flex; justify-content: space-between; font-size: 1.3rem; font-weight: 700; color: var(--primary);">
+                            <span>قابل پرداخت:</span>
+                            <span>${formatPrice(total + (total > 1000000 ? 0 : 50000))}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                ${currentUser ? `
+                    <button class="btn btn-primary btn-block" onclick="placeOrder()">
+                        <i class="fas fa-credit-card"></i> ادامه خرید
+                    </button>
+                ` : `
+                    <div style="text-align: center;">
+                        <p style="color: var(--danger); margin-bottom: 16px;">برای ادامه خرید وارد شوید</p>
+                        <button class="btn btn-primary btn-block" onclick="navigateTo('login')">
+                            <i class="fas fa-sign-in-alt"></i> ورود
+                        </button>
+                    </div>
+                `}
+            </div>
+        </div>
+    </div>
+    `;
+}
+
+function placeOrder() {
+    if (cart.length === 0) {
+        showToast('error', 'خطا', 'سبد خرید شما خالی است');
+        return;
+    }
+    
+    const db = loadDB();
+    const orderId = db.orders.length > 0 ? Math.max(...db.orders.map(o => o.id)) + 1 : 1001;
+    
+    const newOrder = {
+        id: orderId,
+        userId: currentUser.id,
+        customerName: currentUser.name,
+        total: getCartTotal() + (getCartTotal() > 1000000 ? 0 : 50000),
+        status: 'pending',
+        createdAt: new Date().toISOString().split('T')[0]
+    };
+    
+    db.orders.push(newOrder);
+    saveDB(db);
+    
+    cart = [];
+    updateLocalStorage();
+    
+    showToast('success', 'سفارش ثبت شد', `سفارش شماره #${orderId} با موفقیت ثبت شد`);
+    navigateTo('orders');
+}
+
+function renderLoginPage() {
+    return `
+    <div style="max-width: 400px; margin: 0 auto;">
+        <div class="card">
+            <h2 style="text-align: center; margin-bottom: 32px; font-size: 1.5rem; font-weight: 600;">👤 ورود به حساب</h2>
+            
+            <div class="form-group">
+                <label class="form-label">ایمیل</label>
+                <input type="email" class="form-control" id="loginEmail" placeholder="your@email.com">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">رمز عبور</label>
+                <input type="password" class="form-control" id="loginPassword" placeholder="رمز عبور">
+            </div>
+            
+            <button class="btn btn-primary btn-block" onclick="handleLogin()">
+                <i class="fas fa-sign-in-alt"></i> ورود
+            </button>
+            
+            <div style="margin-top: 32px; padding: 16px; background: var(--light); border-radius: var(--radius); font-size: 0.9rem;">
+                <div style="font-weight: 600; margin-bottom: 8px;">حساب‌های آزمایشی:</div>
+                <div>👨‍💼 مدیر: admin@megashop.ir / admin123</div>
+                <div>👤 کاربر: user@megashop.ir / user123</div>
+            </div>
+        </div>
+    </div>
+    `;
+}
+
+function handleLogin() {
+    const email = document.getElementById('loginEmail').value;
+    const password = document.getElementById('loginPassword').value;
+    
+    if (login(email, password)) {
+        navigateTo('home');
+    }
+}
+
+function renderProfilePage() {
+    if (!currentUser) {
+        navigateTo('login');
+        return '';
+    }
+    
+    return `
+    <div style="max-width: 600px; margin: 0 auto;">
+        <h1 style="margin-bottom: 24px; font-size: 1.5rem; font-weight: 700;">👤 پروفایل کاربری</h1>
+        
+        <div class="card">
+            <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px;">
+                <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem; font-weight: 600;">
+                    ${currentUser.avatar}
+                </div>
+                <div>
+                    <div style="font-size: 1.3rem; font-weight: 600;">${currentUser.name}</div>
+                    <div style="color: var(--gray);">${currentUser.email}</div>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">نام کامل</label>
+                <input type="text" class="form-control" id="profileName" value="${currentUser.name}">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">شماره تماس</label>
+                <input type="tel" class="form-control" id="profilePhone" value="${currentUser.phone || ''}">
+            </div>
+            
+            <button class="btn btn-primary" onclick="updateProfile()">
+                <i class="fas fa-save"></i> ذخیره تغییرات
+            </button>
+        </div>
+    </div>
+    `;
+}
+
+function updateProfile() {
+    const name = document.getElementById('profileName').value;
+    const phone = document.getElementById('profilePhone').value;
+    
+    if (!name) {
+        showToast('error', 'خطا', 'نام نمی‌تواند خالی باشد');
+        return;
+    }
+    
+    const db = loadDB();
+    const user = db.users.find(u => u.id === currentUser.id);
+    if (user) {
+        user.name = name;
+        user.phone = phone;
+        user.avatar = name.charAt(0);
+        
+        saveDB(db);
+        currentUser = user;
+        updateLocalStorage();
+        
+        showToast('success', 'بروزرسانی', 'اطلاعات با موفقیت ذخیره شد');
+        renderPage();
+    }
+}
+
+function renderOrdersPage() {
+    if (!currentUser) {
+        navigateTo('login');
+        return '';
+    }
+    
+    const db = loadDB();
+    const userOrders = db.orders.filter(order => order.userId === currentUser.id);
+    
+    return `
+    <h1 style="margin-bottom: 24px; font-size: 1.5rem; font-weight: 700;">📋 سفارشات من</h1>
+    
+    ${userOrders.length === 0 ? `
+        <div style="text-align: center; padding: 80px 20px;">
+            <div style="font-size: 4rem; color: var(--gray-light); margin-bottom: 24px;">📭</div>
+            <h2 style="font-size: 1.5rem; font-weight: 600; margin-bottom: 16px;">سفارشی ثبت نکرده‌اید</h2>
+            <button class="btn btn-primary" onclick="navigateTo('products')">
+                <i class="fas fa-shopping-bag"></i> مشاهده محصولات
+            </button>
+        </div>
+    ` : `
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>شماره سفارش</th>
+                        <th>تاریخ</th>
+                        <th>مبلغ</th>
+                        <th>وضعیت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${userOrders.map(order => `
+                    <tr>
+                        <td>#${order.id}</td>
+                        <td>${formatDate(order.createdAt)}</td>
+                        <td>${formatPrice(order.total)}</td>
+                        <td>
+                            <span class="badge ${order.status === 'delivered' ? 'badge-success' : order.status === 'shipped' ? 'badge-primary' : 'badge-warning'}">
+                                ${order.status === 'delivered' ? 'تحویل شده' : order.status === 'shipped' ? 'ارسال شده' : 'در انتظار'}
+                            </span>
+                        </td>
+                        <td>
+                            <button class="btn btn-sm" style="background: var(--info); color: white;" onclick="viewOrderDetail(${order.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        </div>
+    `}
+    `;
+}
+
+function viewOrderDetail(orderId) {
+    const db = loadDB();
+    const order = db.orders.find(o => o.id === orderId);
+    if (!order) return;
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal-overlay active';
+    modal.innerHTML = `
+        <div class="modal">
+            <div class="modal-header">
+                <div style="font-size: 1.3rem; font-weight: 600;">جزئیات سفارش #${order.id}</div>
+                <button onclick="this.closest('.modal-overlay').remove()" style="background: none; border: none; font-size: 1.2rem; color: var(--gray); cursor: pointer;">✕</button>
+            </div>
+            <div class="modal-body">
+                <div style="margin-bottom: 20px;">
+                    <div style="font-weight: 600; margin-bottom: 8px;">اطلاعات سفارش:</div>
+                    <div>مشتری: ${order.customerName}</div>
+                    <div>تاریخ: ${formatDate(order.createdAt)}</div>
+                    <div>وضعیت: ${order.status === 'delivered' ? 'تحویل شده' : order.status === 'shipped' ? 'ارسال شده' : 'در انتظار'}</div>
+                </div>
+                
+                <div style="background: var(--light); padding: 16px; border-radius: var(--radius);">
+                    <div style="display: flex; justify-content: space-between; font-size: 1.1rem; font-weight: 700; color: var(--primary);">
+                        <span>مبلغ نهایی:</span>
+                        <span>${formatPrice(order.total)}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="this.closest('.modal-overlay').remove()">بستن</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+// ====================================================================
+// ADMIN PANEL
+// ====================================================================
+function renderAdminPanel() {
+    const db = loadDB();
+    const openTickets = db.tickets.filter(t => t.status === 'open').length;
+    const unreadNotifications = db.notifications.filter(n => !n.isRead).length;
+    
+    return `
+    <nav class="navbar">
+        <div class="logo" onclick="adminNavigate('dashboard')">
+            <i class="fas fa-cogs"></i>
+            <span>پنل مدیریت</span>
+        </div>
+        
+        <div style="display: flex; align-items: center; gap: 16px;">
+            <span style="font-size: 0.9rem; color: var(--gray);">${currentUser?.name || 'مدیر'}</span>
+            <button class="btn btn-danger btn-sm" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i> خروج
+            </button>
+        </div>
+    </nav>
+    
+    <div class="sidebar">
+        <div style="padding: 20px;">
+            <div class="sidebar-item ${adminPage === 'dashboard' ? 'active' : ''}" onclick="adminNavigate('dashboard')">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>داشبورد</span>
+            </div>
+            
+            <div class="sidebar-item ${adminPage === 'admins' ? 'active' : ''}" onclick="adminNavigate('admins')">
+                <i class="fas fa-user-shield"></i>
+                <span>ادمین‌ها</span>
+                <span style="margin-right: auto; background: var(--primary); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem;">${db.admins.length}</span>
+            </div>
+            
+            <div class="sidebar-item ${adminPage === 'tickets' ? 'active' : ''}" onclick="adminNavigate('tickets')">
+                <i class="fas fa-ticket-alt"></i>
+                <span>تیکت‌ها</span>
+                <span style="margin-right: auto; background: var(--danger); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem;">${openTickets}</span>
+            </div>
+            
+            <div class="sidebar-item ${adminPage === 'notifications' ? 'active' : ''}" onclick="adminNavigate('notifications')">
+                <i class="fas fa-bell"></i>
+                <span>اعلان‌ها</span>
+                <span style="margin-right: auto; background: var(--warning); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem;">${unreadNotifications}</span>
+            </div>
+            
+            <div class="sidebar-item ${adminPage === 'discounts' ? 'active' : ''}" onclick="adminNavigate('discounts')">
+                <i class="fas fa-tags"></i>
+                <span>کد تخفیف</span>
+            </div>
+            
+            <div class="sidebar-item ${adminPage === 'gateways' ? 'active' : ''}" onclick="adminNavigate('gateways')">
+                <i class="fas fa-credit-card"></i>
+                <span>درگاه پرداخت</span>
+            </div>
+            
+            <div class="sidebar-item ${adminPage === 'products' ? 'active' : ''}" onclick="adminNavigate('products')">
+                <i class="fas fa-box"></i>
+                <span>محصولات</span>
+                <span style="margin-right: auto; background: var(--primary); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem;">${db.products.length}</span>
+            </div>
+            
+            <div class="sidebar-item ${adminPage === 'orders' ? 'active' : ''}" onclick="adminNavigate('orders')">
+                <i class="fas fa-shopping-cart"></i>
+                <span>سفارشات</span>
+                <span style="margin-right: auto; background: var(--primary); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem;">${db.orders.length}</span>
+            </div>
+            
+            <div class="sidebar-item ${adminPage === 'users' ? 'active' : ''}" onclick="adminNavigate('users')">
+                <i class="fas fa-users"></i>
+                <span>کاربران</span>
+                <span style="margin-right: auto; background: var(--primary); color: white; padding: 2px 8px; border-radius: 10px; font-size: 0.75rem;">${db.users.length}</span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="main-content" id="adminContent">
+        <!-- Admin content will be loaded here -->
+    </div>
+    
+    <div class="mode-switch" onclick="toggleMode()">
+        <i class="fas ${currentMode === 'frontend' ? 'fa-cogs' : 'fa-store'}"></i>
+    </div>
+    `;
+}
+
+function adminNavigate(page) {
+    adminPage = page;
+    renderAdminPage();
+}
+
+function renderAdminPage() {
+    const container = document.getElementById('adminContent');
+    
+    switch(adminPage) {
+        case 'dashboard': container.innerHTML = renderAdminDashboard(); break;
+        case 'admins': container.innerHTML = renderAdminAdmins(); break;
+        case 'tickets': container.innerHTML = renderAdminTickets(); break;
+        case 'notifications': container.innerHTML = renderAdminNotifications(); break;
+        case 'discounts': container.innerHTML = renderAdminDiscounts(); break;
+        case 'gateways': container.innerHTML = renderAdminGateways(); break;
+        case 'products': container.innerHTML = renderAdminProducts(); break;
+        case 'orders': container.innerHTML = renderAdminOrders(); break;
+        case 'users': container.innerHTML = renderAdminUsers(); break;
+        default: container.innerHTML = renderAdminDashboard();
+    }
+}
+
+// ====================================================================
+// ADMIN PAGES - کاملاً عملیاتی
+// ====================================================================
+
+// 1. مدیریت ادمین‌ها
+function renderAdminAdmins() {
+    const db = loadDB();
+    let editingAdminId = null;
+    
+    function openAddAdminModal() {
+        editingAdminId = null;
+        document.getElementById('adminModalTitle').textContent = 'افزودن ادمین جدید';
+        document.getElementById('adminName').value = '';
+        document.getElementById('adminEmail').value = '';
+        document.getElementById('adminPassword').value = '';
+        document.getElementById('adminRole').value = 'admin';
+        document.getElementById('adminStatus').value = 'active';
+        openModal('adminModal');
+    }
+    
+    function editAdmin(adminId) {
+        const admin = db.admins.find(a => a.id === adminId);
+        if (!admin) return;
+        
+        editingAdminId = adminId;
+        document.getElementById('adminModalTitle').textContent = 'ویرایش ادمین';
+        document.getElementById('adminName').value = admin.name;
+        document.getElementById('adminEmail').value = admin.email;
+        document.getElementById('adminPassword').value = '';
+        document.getElementById('adminRole').value = admin.role;
+        document.getElementById('adminStatus').value = admin.status;
+        openModal('adminModal');
+    }
+    
+    function saveAdmin() {
+        const name = document.getElementById('adminName').value;
+        const email = document.getElementById('adminEmail').value;
+        const password = document.getElementById('adminPassword').value;
+        const role = document.getElementById('adminRole').value;
+        const status = document.getElementById('adminStatus').value;
+        
+        if (!name || !email) {
+            showToast('error', 'خطا', 'لطفاً نام و ایمیل را وارد کنید');
+            return;
+        }
+        
+        if (editingAdminId) {
+            // ویرایش ادمین موجود
+            const admin = db.admins.find(a => a.id === editingAdminId);
+            if (admin) {
+                admin.name = name;
+                admin.email = email;
+                admin.role = role;
+                admin.status = status;
+                
+                if (password) {
+                    // همچنین کاربر مربوطه را آپدیت کن
+                    const user = db.users.find(u => u.email === admin.email);
+                    if (user) user.password = password;
+                }
+                
+                saveDB(db);
+                showToast('success', 'ویرایش موفق', 'اطلاعات ادمین ویرایش شد');
+            }
+        } else {
+            // افزودن ادمین جدید
+            if (!password) {
+                showToast('error', 'خطا', 'لطفاً رمز عبور را وارد کنید');
+                return;
+            }
+            
+            if (db.admins.find(a => a.email === email)) {
+                showToast('error', 'خطا', 'این ایمیل قبلاً ثبت شده است');
+                return;
+            }
+            
+            const newAdmin = {
+                id: db.admins.length + 1,
+                name,
+                email,
+                role,
+                status,
+                lastLogin: new Date().toISOString().split('T')[0],
+                createdAt: new Date().toISOString().split('T')[0]
+            };
+            
+            db.admins.push(newAdmin);
+            
+            // همچنین در لیست کاربران نیز اضافه شود
+            if (!db.users.find(u => u.email === email)) {
+                db.users.push({
+                    id: db.users.length + 1,
+                    name,
+                    email,
+                    password,
+                    role: 'admin',
+                    avatar: name.charAt(0),
+                    createdAt: new Date().toISOString().split('T')[0]
+                });
+            }
+            
+            saveDB(db);
+            showToast('success', 'افزودن موفق', `ادمین ${name} با موفقیت افزوده شد`);
+        }
+        
+        closeModal('adminModal');
+        renderAdminPage();
+    }
+    
+    function deleteAdmin(adminId) {
+        const admin = db.admins.find(a => a.id === adminId);
+        if (!admin) return;
+        
+        if (admin.role === 'super_admin') {
+            showToast('error', 'خطا', 'نمی‌توان مدیر ارشد را حذف کرد');
+            return;
+        }
+        
+        if (admin.email === currentUser.email) {
+            showToast('error', 'خطا', 'نمی‌توانید حساب خود را حذف کنید');
+            return;
+        }
+        
+        if (confirm(`آیا از حذف ادمین "${admin.name}" مطمئن هستید؟`)) {
+            db.admins = db.admins.filter(a => a.id !== adminId);
+            saveDB(db);
+            showToast('success', 'حذف موفق', 'ادمین با موفقیت حذف شد');
+            renderAdminPage();
+        }
+    }
+    
+    return `
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h1 style="font-size: 1.5rem; font-weight: 700;">👤 مدیریت ادمین‌ها</h1>
+        <button class="btn btn-primary" onclick="openAddAdminModal()">
+            <i class="fas fa-plus"></i> افزودن ادمین جدید
+        </button>
+    </div>
+    
+    <div class="card">
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>نام</th>
+                        <th>ایمیل</th>
+                        <th>نقش</th>
+                        <th>وضعیت</th>
+                        <th>آخرین ورود</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${db.admins.map(admin => {
+                        const roleText = {
+                            super_admin: 'مدیر ارشد',
+                            admin: 'مدیر',
+                            editor: 'ویرایشگر',
+                            support: 'پشتیبان'
+                        }[admin.role] || admin.role;
+                        
+                        return `
+                        <tr>
+                            <td>
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                                        ${admin.name.charAt(0)}
+                                    </div>
+                                    <div>${admin.name}</div>
+                                </div>
+                            </td>
+                            <td>${admin.email}</td>
+                            <td>
+                                <span class="badge ${admin.role === 'super_admin' ? 'badge-danger' : admin.role === 'admin' ? 'badge-primary' : 'badge-info'}">
+                                    ${roleText}
+                                </span>
+                            </td>
+                            <td>
+                                <span class="badge ${admin.status === 'active' ? 'badge-success' : 'badge-danger'}">
+                                    ${admin.status === 'active' ? 'فعال' : 'غیرفعال'}
+                                </span>
+                            </td>
+                            <td>${formatDate(admin.lastLogin)}</td>
+                            <td>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn btn-sm" style="background: var(--info); color: white;" onclick="editAdmin(${admin.id})">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    <button class="btn btn-sm" style="background: var(--danger); color: white;" onclick="deleteAdmin(${admin.id})" ${admin.role === 'super_admin' ? 'disabled' : ''}>
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Modal افزودن/ویرایش ادمین -->
+    <div class="modal-overlay" id="adminModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div style="font-size: 1.3rem; font-weight: 600;" id="adminModalTitle">افزودن ادمین جدید</div>
+                <button onclick="closeModal('adminModal')" style="background: none; border: none; font-size: 1.2rem; color: var(--gray); cursor: pointer;">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">نام کامل</label>
+                    <input type="text" class="form-control" id="adminName" placeholder="نام و نام خانوادگی">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">ایمیل</label>
+                    <input type="email" class="form-control" id="adminEmail" placeholder="admin@example.com">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">رمز عبور</label>
+                    <input type="password" class="form-control" id="adminPassword" placeholder="رمز عبور">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">نقش</label>
+                    <select class="form-control" id="adminRole">
+                        <option value="admin">مدیر</option>
+                        <option value="editor">ویرایشگر</option>
+                        <option value="support">پشتیبان</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">وضعیت</label>
+                    <select class="form-control" id="adminStatus">
+                        <option value="active">فعال</option>
+                        <option value="inactive">غیرفعال</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeModal('adminModal')">انصراف</button>
+                <button class="btn btn-primary" onclick="saveAdmin()">ذخیره</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        window.openAddAdminModal = ${openAddAdminModal.toString()};
+        window.editAdmin = ${editAdmin.toString()};
+        window.saveAdmin = ${saveAdmin.toString()};
+        window.deleteAdmin = ${deleteAdmin.toString()};
+    </script>
+    `;
+}
+
+// 2. مدیریت تیکت‌ها
+function renderAdminTickets() {
+    const db = loadDB();
+    let editingTicketId = null;
+    
+    function viewTicket(ticketId) {
+        editingTicketId = ticketId;
+        const ticket = db.tickets.find(t => t.id === ticketId);
+        if (!ticket) return;
+        
+        const departments = { support: 'پشتیبانی', orders: 'سفارشات', returns: 'مرجوعی', info: 'اطلاعات' };
+        const priorityLabels = { high: 'بالا', medium: 'متوسط', low: 'پایین' };
+        
+        document.getElementById('ticketModalTitle').textContent = `تیکت #${ticket.id} - ${ticket.subject}`;
+        
+        document.getElementById('ticketModalContent').innerHTML = `
+            <div style="margin-bottom: 24px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                    <div>
+                        <div style="font-weight: 600; margin-bottom: 4px;">${ticket.userName}</div>
+                        <div style="color: var(--gray); font-size: 0.9rem;">${ticket.userEmail || ''}</div>
+                    </div>
+                    <div style="text-align: left;">
+                        <div style="font-weight: 600; color: var(--primary);">${formatDate(ticket.createdAt)}</div>
+                        <div style="font-size: 0.9rem; color: var(--gray);">آخرین بروزرسانی</div>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+                    <div>
+                        <div style="font-size: 0.9rem; color: var(--gray);">بخش:</div>
+                        <div style="font-weight: 600;">${departments[ticket.department] || ticket.department}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.9rem; color: var(--gray);">اولویت:</div>
+                        <div style="font-weight: 600;">${priorityLabels[ticket.priority] || ticket.priority}</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 0.9rem; color: var(--gray);">وضعیت:</div>
+                        <div style="font-weight: 600;">${ticket.status === 'open' ? 'باز' : ticket.status === 'answered' ? 'پاسخ داده' : 'بسته'}</div>
+                    </div>
+                </div>
+                
+                <div style="background: var(--light); padding: 16px; border-radius: var(--radius); margin-bottom: 20px;">
+                    <div style="font-weight: 600; margin-bottom: 8px;">پیام کاربر:</div>
+                    <div style="line-height: 1.6;">${ticket.message}</div>
+                </div>
+            </div>
+            
+            ${ticket.responses && ticket.responses.length > 0 ? `
+                <div style="margin-bottom: 24px;">
+                    <div style="font-weight: 600; margin-bottom: 12px;">پاسخ‌ها:</div>
+                    ${ticket.responses.map(response => `
+                        <div style="background: var(--light); padding: 16px; border-radius: var(--radius); margin-bottom: 12px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                                <div style="font-weight: 600;">${response.adminName || 'مدیر'}</div>
+                                <div style="font-size: 0.85rem; color: var(--gray);">${formatDate(response.createdAt)}</div>
+                            </div>
+                            <div style="line-height: 1.6;">${response.message}</div>
+                        </div>
+                    `).join('')}
+                </div>
+            ` : `
+                <div style="text-align: center; padding: 32px; color: var(--gray);">
+                    هنوز پاسخی برای این تیکت داده نشده است
+                </div>
+            `}
+            
+            ${ticket.status !== 'closed' ? `
+                <div>
+                    <div style="font-weight: 600; margin-bottom: 8px;">ارسال پاسخ:</div>
+                    <textarea class="form-control" id="ticketResponse" rows="4" placeholder="پاسخ خود را بنویسید..."></textarea>
+                    <div style="display: flex; gap: 12px; margin-top: 16px;">
+                        <button class="btn btn-primary" onclick="sendTicketResponse()">ارسال پاسخ</button>
+                        <button class="btn btn-danger" onclick="closeCurrentTicket()">بستن تیکت</button>
+                    </div>
+                </div>
+            ` : `
+                <div style="text-align: center; padding: 20px; background: var(--light); border-radius: var(--radius);">
+                    <div style="color: var(--accent); font-weight: 600;">این تیکت بسته شده است</div>
+                </div>
+            `}
+        `;
+        
+        openModal('ticketModal');
+    }
+    
+    function sendTicketResponse() {
+        const response = document.getElementById('ticketResponse').value;
+        if (!response) {
+            showToast('error', 'خطا', 'لطفاً متن پاسخ را وارد کنید');
+            return;
+        }
+        
+        const ticket = db.tickets.find(t => t.id === editingTicketId);
+        if (!ticket) return;
+        
+        if (!ticket.responses) ticket.responses = [];
+        ticket.responses.push({
+            adminName: currentUser.name,
+            message: response,
+            createdAt: new Date().toISOString().split('T')[0]
+        });
+        
+        ticket.status = 'answered';
+        ticket.updatedAt = new Date().toISOString().split('T')[0];
+        
+        saveDB(db);
+        
+        // Add notification
+        db.notifications.unshift({
+            id: db.notifications.length + 1,
+            title: 'پاسخ به تیکت',
+            message: `پاسخی به تیکت #${ticket.id} داده شد.`,
+            type: 'ticket',
+            isRead: false,
+            createdAt: new Date().toISOString()
+        });
+        
+        saveDB(db);
+        
+        closeModal('ticketModal');
+        showToast('success', 'پاسخ ارسال شد', 'پاسخ شما با موفقیت ثبت شد');
+        renderAdminPage();
+    }
+    
+    function closeCurrentTicket() {
+        if (!confirm('آیا از بستن این تیکت مطمئن هستید؟')) return;
+        
+        const ticket = db.tickets.find(t => t.id === editingTicketId);
+        if (!ticket) return;
+        
+        ticket.status = 'closed';
+        ticket.updatedAt = new Date().toISOString().split('T')[0];
+        
+        saveDB(db);
+        
+        closeModal('ticketModal');
+        showToast('success', 'تیکت بسته شد', 'تیکت با موفقیت بسته شد');
+        renderAdminPage();
+    }
+    
+    return `
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h1 style="font-size: 1.5rem; font-weight: 700;">🎫 مدیریت تیکت‌ها</h1>
+    </div>
+    
+    <div class="card">
+        <div class="table-container">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>کاربر</th>
+                        <th>موضوع</th>
+                        <th>بخش</th>
+                        <th>وضعیت</th>
+                        <th>عملیات</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${db.tickets.map(ticket => {
+                        const statusColor = {
+                            open: 'badge-danger',
+                            answered: 'badge-warning',
+                            closed: 'badge-success'
+                        }[ticket.status] || 'badge-primary';
+                        
+                        const statusText = {
+                            open: 'باز',
+                            answered: 'پاسخ داده',
+                            closed: 'بسته'
+                        }[ticket.status] || ticket.status;
+                        
+                        return `
+                        <tr>
+                            <td>#${ticket.id}</td>
+                            <td>${ticket.userName}</td>
+                            <td>${ticket.subject}</td>
+                            <td>${ticket.department}</td>
+                            <td><span class="badge ${statusColor}">${statusText}</span></td>
+                            <td>
+                                <div style="display: flex; gap: 8px;">
+                                    <button class="btn btn-sm" style="background: var(--info); color: white;" onclick="viewTicket(${ticket.id})">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Modal مشاهده و پاسخ به تیکت -->
+    <div class="modal-overlay" id="ticketModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div style="font-size: 1.3rem; font-weight: 600;" id="ticketModalTitle">مشاهده تیکت</div>
+                <button onclick="closeModal('ticketModal')" style="background: none; border: none; font-size: 1.2rem; color: var(--gray); cursor: pointer;">✕</button>
+            </div>
+            <div class="modal-body">
+                <div id="ticketModalContent"></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        window.viewTicket = ${viewTicket.toString()};
+        window.sendTicketResponse = ${sendTicketResponse.toString()};
+        window.closeCurrentTicket = ${closeCurrentTicket.toString()};
+    </script>
+    `;
+}
+
+// 3. مدیریت درگاه‌های پرداخت
+function renderAdminGateways() {
+    const db = loadDB();
+    let editingGatewayId = null;
+    
+    function openAddGatewayModal() {
+        editingGatewayId = null;
+        document.getElementById('gatewayModalTitle').textContent = 'افزودن درگاه پرداخت';
+        document.getElementById('gatewayName').value = '';
+        document.getElementById('gatewayType').value = 'online';
+        document.getElementById('gatewayDescription').value = '';
+        document.getElementById('gatewayStatus').value = 'active';
+        openModal('gatewayModal');
+    }
+    
+    function editGateway(gatewayId) {
+        const gateway = db.paymentGateways.find(g => g.id === gatewayId);
+        if (!gateway) return;
+        
+        editingGatewayId = gatewayId;
+        document.getElementById('gatewayModalTitle').textContent = 'ویرایش درگاه پرداخت';
+        document.getElementById('gatewayName').value = gateway.name;
+        document.getElementById('gatewayType').value = gateway.type;
+        document.getElementById('gatewayDescription').value = gateway.description || '';
+        document.getElementById('gatewayStatus').value = gateway.status;
+        openModal('gatewayModal');
+    }
+    
+    function saveGateway() {
+        const name = document.getElementById('gatewayName').value;
+        const type = document.getElementById('gatewayType').value;
+        const description = document.getElementById('gatewayDescription').value;
+        const status = document.getElementById('gatewayStatus').value;
+        
+        if (!name) {
+            showToast('error', 'خطا', 'لطفاً نام درگاه را وارد کنید');
+            return;
+        }
+        
+        if (editingGatewayId) {
+            // ویرایش درگاه موجود
+            const gateway = db.paymentGateways.find(g => g.id === editingGatewayId);
+            if (gateway) {
+                gateway.name = name;
+                gateway.type = type;
+                gateway.description = description;
+                gateway.status = status;
+                
+                saveDB(db);
+                showToast('success', 'ویرایش موفق', 'اطلاعات درگاه ویرایش شد');
+            }
+        } else {
+            // افزودن درگاه جدید
+            const newGateway = {
+                id: db.paymentGateways.length + 1,
+                name,
+                type,
+                description,
+                status,
+                createdAt: new Date().toISOString().split('T')[0]
+            };
+            
+            db.paymentGateways.push(newGateway);
+            saveDB(db);
+            showToast('success', 'افزودن موفق', `درگاه پرداخت ${name} با موفقیت افزوده شد`);
+        }
+        
+        closeModal('gatewayModal');
+        renderAdminPage();
+    }
+    
+    function toggleGatewayStatus(gatewayId) {
+        const gateway = db.paymentGateways.find(g => g.id === gatewayId);
+        if (!gateway) return;
+        
+        gateway.status = gateway.status === 'active' ? 'inactive' : 'active';
+        saveDB(db);
+        
+        const statusText = gateway.status === 'active' ? 'فعال' : 'غیرفعال';
+        showToast('success', 'تغییر وضعیت', `درگاه ${gateway.name} ${statusText} شد`);
+        renderAdminPage();
+    }
+    
+    function deleteGateway(gatewayId) {
+        const gateway = db.paymentGateways.find(g => g.id === gatewayId);
+        if (!gateway) return;
+        
+        if (db.paymentGateways.length <= 1) {
+            showToast('error', 'خطا', 'حداقل باید یک درگاه پرداخت فعال باشد');
+            return;
+        }
+        
+        if (confirm(`آیا از حذف درگاه پرداخت "${gateway.name}" مطمئن هستید؟`)) {
+            db.paymentGateways = db.paymentGateways.filter(g => g.id !== gatewayId);
+            saveDB(db);
+            showToast('success', 'حذف موفق', 'درگاه پرداخت با موفقیت حذف شد');
+            renderAdminPage();
+        }
+    }
+    
+    return `
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h1 style="font-size: 1.5rem; font-weight: 700;">💳 درگاه‌های پرداخت</h1>
+        <button class="btn btn-primary" onclick="openAddGatewayModal()">
+            <i class="fas fa-plus"></i> افزودن درگاه جدید
+        </button>
+    </div>
+    
+    <div class="grid grid-cols-2" style="gap: 24px;">
+        ${db.paymentGateways.map(gateway => {
+            const typeText = gateway.type === 'online' ? 'آنلاین' : 'آفلاین';
+            const statusText = gateway.status === 'active' ? 'فعال' : 'غیرفعال';
+            
+            return `
+            <div class="card">
+                <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 20px;">
+                    <div style="width: 60px; height: 60px; border-radius: 12px; background: ${gateway.status === 'active' ? 'var(--primary)' : '#999'}; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px;">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="font-size: 1.2rem; font-weight: 600;">${gateway.name}</div>
+                        <div style="font-size: 0.9rem; color: var(--gray);">${gateway.description}</div>
+                    </div>
+                    <span class="badge ${gateway.status === 'active' ? 'badge-success' : 'badge-danger'}">
+                        ${statusText}
+                    </span>
+                </div>
+                
+                <div style="display: flex; gap: 12px;">
+                    <button class="btn btn-sm" style="flex: 1; background: ${gateway.status === 'active' ? 'var(--warning)' : 'var(--accent)'}; color: white;" onclick="toggleGatewayStatus(${gateway.id})">
+                        <i class="fas ${gateway.status === 'active' ? 'fa-pause' : 'fa-play'}"></i>
+                        ${gateway.status === 'active' ? 'غیرفعال' : 'فعال'}
+                    </button>
+                    <button class="btn btn-sm" style="flex: 1; background: var(--info); color: white;" onclick="editGateway(${gateway.id})">
+                        <i class="fas fa-edit"></i> ویرایش
+                    </button>
+                    <button class="btn btn-sm" style="flex: 1; background: var(--danger); color: white;" onclick="deleteGateway(${gateway.id})">
+                        <i class="fas fa-trash"></i> حذف
+                    </button>
+                </div>
+            </div>
+            `;
+        }).join('')}
+    </div>
+    
+    <!-- Modal افزودن/ویرایش درگاه پرداخت -->
+    <div class="modal-overlay" id="gatewayModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div style="font-size: 1.3rem; font-weight: 600;" id="gatewayModalTitle">افزودن درگاه پرداخت</div>
+                <button onclick="closeModal('gatewayModal')" style="background: none; border: none; font-size: 1.2rem; color: var(--gray); cursor: pointer;">✕</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">نام درگاه</label>
+                    <input type="text" class="form-control" id="gatewayName" placeholder="مثال: زرین‌پال">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">نوع درگاه</label>
+                    <select class="form-control" id="gatewayType">
+                        <option value="online">آنلاین</option>
+                        <option value="offline">آفلاین</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">توضیحات</label>
+                    <textarea class="form-control" id="gatewayDescription" rows="3" placeholder="توضیحات درباره درگاه پرداخت"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">وضعیت</label>
+                    <select class="form-control" id="gatewayStatus">
+                        <option value="active">فعال</option>
+                        <option value="inactive">غیرفعال</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-ghost" onclick="closeModal('gatewayModal')">انصراف</button>
+                <button class="btn btn-primary" onclick="saveGateway()">ذخیره</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        window.openAddGatewayModal = ${openAddGatewayModal.toString()};
+        window.editGateway = ${editGateway.toString()};
+        window.saveGateway = ${saveGateway.toString()};
+        window.toggleGatewayStatus = ${toggleGatewayStatus.toString()};
+        window.deleteGateway = ${deleteGateway.toString()};
+    </script>
+    `;
+}
+
+// 4. داشبورد مدیریت
+function renderAdminDashboard() {
+    const db = loadDB();
+    const totalRevenue = db.orders.reduce((sum, order) => sum + order.total, 0);
+    const pendingOrders = db.orders.filter(o => o.status === 'pending').length;
+    const openTickets = db.tickets.filter(t => t.status === 'open').length;
+    const lowStockProducts = db.products.filter(p => p.stock < 5).length;
+    
+    return `
+    <h1 style="margin-bottom: 24px; font-size: 1.5rem; font-weight: 700;">📊 داشبورد مدیریت</h1>
+    
+    <div class="grid grid-cols-4" style="gap: 20px; margin-bottom: 32px;">
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: var(--primary);">${db.orders.length}</div>
+            <div style="color: var(--gray);">سفارشات</div>
+        </div>
+        
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: var(--accent);">${formatPrice(totalRevenue).split(' ')[0]}</div>
+            <div style="color: var(--gray);">درآمد کل</div>
+        </div>
+        
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: var(--info);">${db.users.length}</div>
+            <div style="color: var(--gray);">کاربران</div>
+        </div>
+        
+        <div class="card" style="text-align: center;">
+            <div style="font-size: 2.5rem; font-weight: 700; color: var(--warning);">${db.products.length}</div>
+            <div style="color: var(--gray);">محصولات</div>
+        </div>
+    </div>
+    
+    <div class="grid grid-cols-2" style="gap: 24px;">
+        <div class="card">
+            <h3 style="font-size: 1.2rem; font-weight: 600; margin-bottom: 20px;">آمار سیستم</h3>
+            <div style="padding: 20px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                    <div>تیکت‌های باز:</div>
+                    <div style="font-weight: 700; color: var(--danger);">${openTickets}</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                    <div>سفارشات در انتظار:</div>
+                    <div style="font-weight: 700; color: var(--warning);">${pendingOrders}</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                    <div>اعلان‌های جدید:</div>
+                    <div style="font-weight: 700; color: var(--warning);">${db.notifications.filter(n => !n.isRead).length}</div>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 16px;">
+                    <div>محصولات کم‌موجود:</div>
+                    <div style="font-weight: 700; color: var(--danger);">${lowStockProducts}</div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <h3 style="font-size: 1.2rem; font-weight: 600; margin-bottom: 20px;">آخرین فعالیت‌ها</h3>
+            <div style="max-height: 300px; overflow-y: auto;">
+                ${db.notifications.slice(0, 5).map(notification => `
+                <div style="padding: 12px; border-bottom: 1px solid var(--gray-light); display: flex; align-items: center; gap: 12px;">
+                    <div style="color: ${notification.type === 'order' ? 'var(--primary)' : notification.type === 'stock' ? 'var(--danger)' : 'var(--warning)'};">
+                        <i class="fas ${notification.type === 'order' ? 'fa-shopping-cart' : notification.type === 'stock' ? 'fa-box' : 'fa-info-circle'}"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; font-size: 0.9rem;">${notification.title}</div>
+                        <div style="font-size: 0.85rem; color: var(--gray);">${notification.message}</div>
+                    </div>
+                </div>
+                `).join('')}
+            </div>
+        </div>
+    </div>
+    `;
+}
+
+// 5. سایر صفحات مدیریت (ساده‌سازی شده)
+function renderAdminNotifications() {
+    const db = loadDB();
+    const unreadCount = db.notifications.filter(n => !n.isRead).length;
+    
+    return `
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h1 style="font-size: 1.5rem; font-weight: 700;">🔔 مدیریت اعلان‌ها</h1>
+        <div style="display: flex; gap: 12px;">
+            <button class="btn btn-success" onclick="markAllAsRead()" ${unreadCount === 0 ? 'disabled' : ''}>
+                <i class="fas fa-check-double"></i> خواندن همه
+            </button>
+            <button class="btn btn-danger" onclick="clearAllNotifications()" ${db.notifications.length === 0 ? 'disabled' : ''}>
+                <i class="fas fa-trash"></i> حذف همه
+            </button>
+        </div>
+    </div>
+    
+    <div class="card">
+        <div style="max-height: 500px; overflow-y: auto;">
+            ${db.notifications.map(notification => `
+            <div style="padding: 16px; border-bottom: 1px solid var(--gray-light); display: flex; gap: 16px; align-items: start; background: ${!notification.isRead ? 'rgba(108,92,231,0.05)' : 'transparent'}">
+                <div style="color: ${notification.type === 'order' ? 'var(--primary)' : notification.type === 'stock' ? 'var(--danger)' : 'var(--warning)'};">
+                    <i class="fas ${notification.type === 'order' ? 'fa-shopping-cart' : notification.type === 'stock' ? 'fa-box' : 'fa-info-circle'}"></i>
+                </div>
+                <div style="flex: 1;">
+                    <div style="font-weight: 600; margin-bottom: 4px;">${notification.title}</div>
+                    <div style="color: var(--gray); font-size: 0.9rem;">${notification.message}</div>
+                    <div style="font-size: 0.85rem; color: var(--gray); margin-top: 8px;">${notification.createdAt}</div>
+                </div>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn btn-sm" style="background: transparent; color: ${!notification.isRead ? 'var(--primary)' : 'var(--gray)'};" onclick="toggleNotificationRead(${notification.id})">
+                        <i class="fas ${!notification.isRead ? 'fa-envelope' : 'fa-envelope-open'}"></i>
+                    </button>
+                    <button class="btn btn-sm" style="background: transparent; color: var(--danger);" onclick="deleteNotification(${notification.id})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            `).join('')}
+        </div>
+    </div>
+    
+    <script>
+    function markAllAsRead() {
+        const db = JSON.parse(localStorage.getItem('megashop_database'));
+        db.notifications.forEach(notification => {
+            notification.isRead = true;
+        });
+        localStorage.setItem('megashop_database', JSON.stringify(db));
+        showToast('success', 'خواندن همه', 'همه اعلان‌ها خوانده شدند');
+        renderAdminPage();
+    }
+    
+    function clearAllNotifications() {
+        if (confirm('آیا از حذف همه اعلان‌ها مطمئن هستید؟')) {
+            const db = JSON.parse(localStorage.getItem('megashop_database'));
+            db.notifications = [];
+            localStorage.setItem('megashop_database', JSON.stringify(db));
+            showToast('success', 'حذف', 'همه اعلان‌ها حذف شدند');
+            renderAdminPage();
+        }
+    }
+    
+    function toggleNotificationRead(notificationId) {
+        const db = JSON.parse(localStorage.getItem('megashop_database'));
+        const notification = db.notifications.find(n => n.id === notificationId);
+        if (notification) {
+            notification.isRead = !notification.isRead;
+            localStorage.setItem('megashop_database', JSON.stringify(db));
+            renderAdminPage();
+        }
+    }
+    
+    function deleteNotification(notificationId) {
+        const db = JSON.parse(localStorage.getItem('megashop_database'));
+        db.notifications = db.notifications.filter(n => n.id !== notificationId);
+        localStorage.setItem('megashop_database', JSON.stringify(db));
+        showToast('success', 'حذف', 'اعلان حذف شد');
+        renderAdminPage();
+    }
+    </script>
+    `;
+}
+
+function renderAdminDiscounts() {
+    const db = loadDB();
+    return `
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h1 style="font-size: 1.5rem; font-weight: 700;">🏷️ مدیریت کدهای تخفیف</h1>
+        <button class="btn btn-primary" onclick="addDiscountCode()">
+            <i class="fas fa-plus"></i> افزودن کد تخفیف
+        </button>
+    </div>
+    
+    <div class="grid grid-cols-2" style="gap: 24px;">
+        ${db.discountCodes.map(discount => {
+            return `
+            <div class="card">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+                    <div>
+                        <div style="font-size: 1.5rem; font-weight: 700; color: var(--primary);">${discount.code}</div>
+                        <div style="color: var(--gray);">${discount.type === 'percent' ? `${discount.value}% تخفیف` : formatPrice(discount.value)}</div>
+                    </div>
+                    <span class="badge ${discount.status === 'active' ? 'badge-success' : 'badge-danger'}">
+                        ${discount.status === 'active' ? 'فعال' : 'منقضی'}
+                    </span>
+                </div>
+                
+                <div style="color: var(--gray); font-size: 0.9rem;">انقضا: ${formatDate(discount.expiresAt)}</div>
+                
+                <div style="display: flex; gap: 8px; margin-top: 16px;">
+                    <button class="btn btn-sm" style="flex: 1; background: var(--info); color: white;">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="btn btn-sm" style="flex: 1; background: var(--danger); color: white;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            `;
+        }).join('')}
+    </div>
+    
+    <script>
+    function addDiscountCode() {
+        const code = prompt('کد تخفیف:');
+        if (!code) return;
+        
+        const type = prompt('نوع (percent/fixed):', 'percent');
+        const value = prompt('مقدار:', '10');
+        const expiresAt = prompt('تاریخ انقضا (YYYY-MM-DD):', '2024-12-31');
+        
+        const db = JSON.parse(localStorage.getItem('megashop_database'));
+        const newDiscount = {
+            id: db.discountCodes.length + 1,
+            code,
+            type,
+            value: type === 'percent' ? parseInt(value) : parseInt(value),
+            status: 'active',
+            expiresAt
+        };
+        
+        db.discountCodes.push(newDiscount);
+        localStorage.setItem('megashop_database', JSON.stringify(db));
+        
+        showToast('success', 'کد تخفیف ایجاد شد', \`کد تخفیف "\${code}" با موفقیت ایجاد شد\`);
+        renderAdminPage();
+    }
+    </script>
+    `;
+}
+
+function renderAdminProducts() {
+    const db = loadDB();
+    return `
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <h1 style="font-size: 1.5rem; font-weight: 700;">📦 مدیریت محصولات</h1>
+        <button class="btn btn-primary" onclick="addProduct()">
+            <i class="fas fa-plus"></i> افزودن محصول
+        </button>
+    </div>
+    
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>محصول</th>
+                    <th>قیمت</th>
+                    <th>موجودی</th>
+                    <th>وضعیت</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${db.products.map(product => `
+                <tr>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="font-size: 2rem;">${product.image}</div>
+                            <div>
+                                <div style="font-weight: 600;">${product.name}</div>
+                                <div style="font-size: 0.85rem; color: var(--gray);">${product.category}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td style="font-weight: 600;">${formatPrice(product.price)}</td>
+                    <td>
+                        <span class="badge ${product.stock > 10 ? 'badge-success' : product.stock > 0 ? 'badge-warning' : 'badge-danger'}">
+                            ${product.stock} عدد
+                        </span>
+                    </td>
+                    <td>
+                        <span class="badge badge-success">فعال</span>
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-sm" style="background: var(--info); color: white;">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="btn btn-sm" style="background: var(--danger); color: white;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+    function addProduct() {
+        const name = prompt('نام محصول:');
+        if (!name) return;
+        
+        const price = prompt('قیمت:', '1000000');
+        const stock = prompt('موجودی:', '10');
+        const category = prompt('دسته‌بندی:', 'electronics');
+        
+        const db = JSON.parse(localStorage.getItem('megashop_database'));
+        const newProduct = {
+            id: db.products.length + 1,
+            name,
+            category,
+            price: parseInt(price),
+            stock: parseInt(stock),
+            rating: 4.5,
+            description: 'توضیحات محصول',
+            image: '📦',
+            status: 'active'
+        };
+        
+        db.products.push(newProduct);
+        localStorage.setItem('megashop_database', JSON.stringify(db));
+        
+        showToast('success', 'محصول ایجاد شد', \`محصول "\${name}" با موفقیت ایجاد شد\`);
+        renderAdminPage();
+    }
+    </script>
+    `;
+}
+
+function renderAdminOrders() {
+    const db = loadDB();
+    return `
+    <h1 style="margin-bottom: 24px; font-size: 1.5rem; font-weight: 700;">📋 مدیریت سفارشات</h1>
+    
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>شماره سفارش</th>
+                    <th>مشتری</th>
+                    <th>مبلغ</th>
+                    <th>وضعیت</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${db.orders.map(order => `
+                <tr>
+                    <td>#${order.id}</td>
+                    <td>${order.customerName}</td>
+                    <td style="font-weight: 600;">${formatPrice(order.total)}</td>
+                    <td>
+                        <span class="badge ${order.status === 'delivered' ? 'badge-success' : order.status === 'shipped' ? 'badge-primary' : 'badge-warning'}">
+                            ${order.status === 'delivered' ? 'تحویل شده' : order.status === 'shipped' ? 'ارسال شده' : 'در انتظار'}
+                        </span>
+                    </td>
+                    <td>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-sm" style="background: var(--info); color: white;" onclick="viewOrder(${order.id})">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm" style="background: var(--accent); color: white;" onclick="updateOrderStatus(${order.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+    function viewOrder(orderId) {
+        const db = JSON.parse(localStorage.getItem('megashop_database'));
+        const order = db.orders.find(o => o.id === orderId);
+        if (!order) return;
+        
+        alert(\`سفارش #\${order.id}\nمشتری: \${order.customerName}\nمبلغ: \${formatPrice(order.total)}\nوضعیت: \${order.status}\nتاریخ: \${formatDate(order.createdAt)}\`);
+    }
+    
+    function updateOrderStatus(orderId) {
+        const newStatus = prompt('وضعیت جدید (pending/shipped/delivered):', 'pending');
+        if (!newStatus) return;
+        
+        const db = JSON.parse(localStorage.getItem('megashop_database'));
+        const order = db.orders.find(o => o.id === orderId);
+        if (order) {
+            order.status = newStatus;
+            localStorage.setItem('megashop_database', JSON.stringify(db));
+            showToast('success', 'بروزرسانی', 'وضعیت سفارش بروزرسانی شد');
+            renderAdminPage();
+        }
+    }
+    </script>
+    `;
+}
+
+function renderAdminUsers() {
+    const db = loadDB();
+    return `
+    <h1 style="margin-bottom: 24px; font-size: 1.5rem; font-weight: 700;">👥 مدیریت کاربران</h1>
+    
+    <div class="table-container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>کاربر</th>
+                    <th>ایمیل</th>
+                    <th>نقش</th>
+                    <th>تاریخ عضویت</th>
+                    <th>عملیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${db.users.map(user => `
+                <tr>
+                    <td>
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: white; font-weight: 600;">
+                                ${user.avatar}
+                            </div>
+                            <div>${user.name}</div>
+                        </div>
+                    </td>
+                    <td>${user.email}</td>
+                    <td>
+                        <span class="badge ${user.role === 'admin' ? 'badge-danger' : 'badge-primary'}">
+                            ${user.role === 'admin' ? 'مدیر' : 'کاربر'}
+                        </span>
+                    </td>
+                    <td>${formatDate(user.createdAt)}</td>
+                    <td>
+                        <div style="display: flex; gap: 8px;">
+                            <button class="btn btn-sm" style="background: var(--info); color: white;">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="btn btn-sm" style="background: var(--danger); color: white;" onclick="deleteUser(${user.id})" ${user.role === 'admin' ? 'disabled' : ''}>
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                `).join('')}
+            </tbody>
+        </table>
+    </div>
+    
+    <script>
+    function deleteUser(userId) {
+        if (!confirm('آیا از حذف این کاربر مطمئن هستید؟')) return;
+        
+        const db = JSON.parse(localStorage.getItem('megashop_database'));
+        db.users = db.users.filter(u => u.id !== userId);
+        localStorage.setItem('megashop_database', JSON.stringify(db));
+        showToast('success', 'حذف', 'کاربر با موفقیت حذف شد');
+        renderAdminPage();
+    }
+    </script>
+    `;
+}
+
+// ====================================================================
+// INITIALIZATION
+// ====================================================================
+document.addEventListener('DOMContentLoaded', () => {
+    renderApp();
+});
+
+// Make functions globally available
+window.navigateTo = navigateTo;
+window.adminNavigate = adminNavigate;
+window.toggleMode = toggleMode;
+window.addToCart = addToCart;
+window.removeFromCart = removeFromCart;
+window.clearCart = clearCart;
+window.placeOrder = placeOrder;
+window.login = login;
+window.logout = logout;
+window.handleLogin = handleLogin;
+window.toggleUserMenu = toggleUserMenu;
+window.showToast = showToast;
+window.formatPrice = formatPrice;
+window.formatDate = formatDate;
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.viewOrderDetail = viewOrderDetail;
+window.updateProfile = updateProfile;
+window.renderApp = renderApp;
+</script>
+</body>
+</html>
