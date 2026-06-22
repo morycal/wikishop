@@ -2,133 +2,56 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>فروشگاه مدرن + زرین‌پال</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;600;700&display=swap" rel="stylesheet">
+<title>ShopX Pro</title>
 
 <style>
-body{
-margin:0;
-font-family:Vazirmatn;
-background:#0f172a;
-color:white;
-}
+body{margin:0;font-family:tahoma;background:#0f172a;color:white}
+header{padding:15px;background:#111827;display:flex;justify-content:space-between}
 
-header{
-display:flex;
-justify-content:space-between;
-padding:15px 20px;
+.container{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;padding:20px}
+
+.card{background:#1f2937;padding:15px;border-radius:15px}
+button{padding:10px;border:none;border-radius:10px;cursor:pointer}
+.add{background:linear-gradient(45deg,#7c3aed,#06b6d4);color:white;width:100%}
+
+.cart{
+position:fixed;left:10px;top:70px;
 background:#111827;
-position:sticky;
-top:0;
-}
-
-.container{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;
-padding:20px;
-}
-
-.card{
-background:#1f2937;
 padding:15px;
-border-radius:15px;
-}
-
-.price{
-color:#22c55e;
-margin:10px 0;
-}
-
-button{
-cursor:pointer;
-border:none;
-padding:10px;
-border-radius:10px;
-}
-
-.add{
-width:100%;
-background:linear-gradient(45deg,#7c3aed,#06b6d4);
-color:white;
-}
-
-.cartBox{
-position:fixed;
-left:10px;
-top:80px;
 width:260px;
-background:#111827;
-padding:15px;
 border-radius:15px;
-max-height:500px;
-overflow:auto;
 }
 
-.item{
-display:flex;
-justify-content:space-between;
-margin:8px 0;
-font-size:14px;
-}
-
-.pay{
-background:#22c55e;
-color:white;
-width:100%;
-margin-top:10px;
-}
-.clear{
-background:#ef4444;
-color:white;
-width:100%;
-margin-top:5px;
-}
+.pay{background:green;color:white;width:100%;margin-top:10px}
 </style>
 </head>
 
 <body>
 
 <header>
-<h2>ShopX</h2>
+<h2>ShopX Pro</h2>
 <div>🛒 <span id="count">0</span></div>
 </header>
 
-<div class="cartBox">
+<div class="cart">
 <h3>سبد خرید</h3>
-<div id="cart"></div>
-<h4>جمع: <span id="total">0</span تومان</h4>
-
-<button class="pay" onclick="pay()">پرداخت با زرین‌پال</button>
-<button class="clear" onclick="clearCart()">خالی کردن</button>
+<div id="list"></div>
+<h4>جمع: <span id="total">0</span></h4>
+<button class="pay" onclick="pay()">پرداخت زرین‌پال</button>
 </div>
 
 <div class="container">
 
 <div class="card">
-<h3>گوشی سامسونگ</h3>
-<p class="price">12,000,000 تومان</p>
-<button class="add" onclick="add('گوشی سامسونگ',12000000)">افزودن</button>
+<h3>گوشی</h3>
+<p>10,000,000</p>
+<button class="add" onclick="add('گوشی',10000000)">افزودن</button>
 </div>
 
 <div class="card">
-<h3>لپ‌تاپ ایسوس</h3>
-<p class="price">30,000,000 تومان</p>
-<button class="add" onclick="add('لپ‌تاپ ایسوس',30000000)">افزودن</button>
-</div>
-
-<div class="card">
-<h3>هدفون سونی</h3>
-<p class="price">4,000,000 تومان</p>
-<button class="add" onclick="add('هدفون سونی',4000000)">افزودن</button>
-</div>
-
-<div class="card">
-<h3>ساعت هوشمند</h3>
-<p class="price">6,500,000 تومان</p>
-<button class="add" onclick="add('ساعت هوشمند',6500000)">افزودن</button>
+<h3>لپ‌تاپ</h3>
+<p>25,000,000</p>
+<button class="add" onclick="add('لپ تاپ',25000000)">افزودن</button>
 </div>
 
 </div>
@@ -141,71 +64,40 @@ function save(){
 localStorage.setItem("cart",JSON.stringify(cart));
 }
 
-function add(name,price){
-cart.push({name,price});
-save();
-render();
-}
-
-function remove(i){
-cart.splice(i,1);
-save();
-render();
-}
-
-function clearCart(){
-cart = [];
+function add(n,p){
+cart.push({name:n,price:p});
 save();
 render();
 }
 
 function render(){
 
-let box = document.getElementById("cart");
-box.innerHTML = "";
+let list = document.getElementById("list");
+list.innerHTML="";
 
 let total = 0;
 
-cart.forEach((item,i)=>{
-total += item.price;
-
-box.innerHTML += `
-<div class="item">
-<span>${item.name}</span>
-<button onclick="remove(${i})">❌</button>
-</div>
-`;
+cart.forEach((i)=>{
+total += i.price;
+list.innerHTML += `<div>${i.name}</div>`;
 });
 
-document.getElementById("count").innerText = cart.length;
 document.getElementById("total").innerText = total;
+document.getElementById("count").innerText = cart.length;
 }
 
 function pay(){
 
-if(cart.length === 0){
-alert("سبد خرید خالی است");
-return;
-}
+let total = cart.reduce((s,i)=>s+i.price,0);
 
-// جمع کل
-let total = cart.reduce((sum,i)=>sum+i.price,0);
-
-// ارسال به بک‌اند زرین‌پال
 fetch("request.php",{
 method:"POST",
 headers:{"Content-Type":"application/json"},
-body:JSON.stringify({
-amount: total
+body:JSON.stringify({amount:total})
 })
-})
-.then(res=>res.json())
-.then(data=>{
-if(data.url){
-window.location.href = data.url;
-}else{
-alert("خطا در اتصال به زرین‌پال");
-}
+.then(r=>r.json())
+.then(d=>{
+if(d.url) window.location.href = d.url;
 });
 
 }
