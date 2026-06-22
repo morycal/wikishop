@@ -1,0 +1,11 @@
+CREATE DATABASE shop;
+
+USE shop;
+
+CREATE TABLE orders (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  amount INT,
+  status VARCHAR(50),
+  ref_id VARCHAR(100),
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
